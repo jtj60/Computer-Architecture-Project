@@ -1,0 +1,19 @@
+[CPU]
+Model			Intel Core i7 9700k
+Core Speed		4602 MHz
+
+[Memory]
+Channel/ Type		Dual/ DDR4
+Physical Memory Size	16 GB
+DRAM Frequency		4300 MHz
+
+[GPU]
+Model			Nvidia Geforce GTX 1080
+Manufactor/ Codename	Gigabyte Technology/ GP104 rev.A1
+VRAM Type/ Size		GDDR5X/ 8 GB
+Base (Boost) Clock	1607 MHz (1733 MHz)
+Memory Clock		5007 MHz
+
+[OS]
+OS Name			Microsoft Windows 10 Pro
+Version			10.0.19042 Build 19042
