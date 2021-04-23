@@ -32,7 +32,10 @@ int main() {
 	int result = 0;
 	int n = sizeof(val)/sizeof(val[0]);
 	
-	knapsack((int*)&W, (int*)&val, (int*)&wt, (int*)&n, (int *)&result);
+	#pragma omp parallel
+	{
+		knapsack((int*)&W, (int*)&val, (int*)&wt, (int*)&n, (int *)&result);
+	}
 	
 	printf("Result: %d\n", result);
 	return 0;

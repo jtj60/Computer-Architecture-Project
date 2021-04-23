@@ -1,4 +1,4 @@
-							
+#include <omp.h>			
 #include <stdio.h>
 void gradeCheck(int *numGrad, char *gradLetter) {
 	
@@ -21,8 +21,10 @@ void gradeCheck(int *numGrad, char *gradLetter) {
 int main() {
 	int mark = 90;
 	char letter = 'F';
-	
-	gradeCheck(&mark,&letter);
+	#pragma omp parallel 
+	{
+		gradeCheck(&mark,&letter);
+	}
 	
 	printf("Number Grade: %d\t Letter Grade: %c\n",mark,letter);
 	return 0;
