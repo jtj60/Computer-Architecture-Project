@@ -11,5 +11,5 @@ done
 for num in {1..10}
 do
 #cuda program commands
-echo $PASSWORD | sudo -S nvprof --print-gpu-trace --print-api-trace ./$CUDAPROGRAM
+echo $PASSWORD | sudo -S nvprof ./$CUDAPROGRAM
 done 

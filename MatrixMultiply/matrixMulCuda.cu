@@ -35,6 +35,7 @@ int main() {
 	cudaMalloc(&dMat2, N * N * sizeof(int));
 	cudaMalloc(&dRes, N * N * sizeof(int));
 	
+	//CPU varibles
 	int mat1[N][N] = { { 1, 1, 1, 1 },
 					{ 2, 2, 2, 2 },
 					{ 3, 3, 3, 3 },
@@ -48,41 +49,18 @@ int main() {
 	
 	
 	//copy data from cpu to gpu
-	cudaMemcpy(dMat1,mat1, N*N*sizeof(int), cudaMemcpyHostToDevice);
-	cudaMemcpy(dMat2,mat2, N*N*sizeof(int), cudaMemcpyHostToDevice);
-	cudaMemcpy(dRes,res, N*N*sizeof(int), cudaMemcpyHostToDevice);
-	/////TEST//////
-	/*printf("dRes\n");
-	printf("Result matrix is \n");
-	for (int i = 0; i < N; i++) {
-		for (int j = 0; j < N; j++)
-			printf("%d ", dRes[i][j]);
-		printf("\n");
-	}
-	printf("dMat1\n");
-	for (int i = 0; i < N; i++) {
-		for (int j = 0; j < N; j++)
-			printf("%d ", dMat1[i][j]);
-		printf("\n");
-	}
-	printf("dMat2\n");
-	for (int i = 0; i < N; i++) {
-		for (int j = 0; j < N; j++)
-			printf("%d ", dMat2[i][j]);
-		printf("\n");
-	}*/
-	/////TEST///////
+	cudaMemcpy(&dMat1,&mat1, N * N * sizeof(int), cudaMemcpyHostToDevice);
+	cudaMemcpy(&dMat2,&mat2, N * N * sizeof(int), cudaMemcpyHostToDevice);
+	cudaMemcpy(&dRes,&res, N * N * sizeof(int), cudaMemcpyHostToDevice);
 	
-	//execute kernel function
-	//printValuesin2DArray<<<BLOCKS,THREADS>>>(dMat1);
 	multiply<<<BLOCKS,THREADS>>>(dMat1,dMat2,dRes);
 	
 	//wait for gpu to finish
 	cudaDeviceSynchronize();
 	//copy result data from GPU to CPU
-	cudaMemcpy(res, dRes, N * N * sizeof(int), cudaMemcpyDeviceToHost);
-	cudaMemcpy(mat1, dMat1, N * N * sizeof(int), cudaMemcpyDeviceToHost);
-	cudaMemcpy(mat2, dMat2, N * N * sizeof(int), cudaMemcpyDeviceToHost);
+	//cudaMemcpy(&mat1, &dMat1, N * N * sizeof(int), cudaMemcpyDeviceToHost);
+	//cudaMemcpy(&mat2, &dMat2, N * N * sizeof(int), cudaMemcpyDeviceToHost);
+	cudaMemcpy(&res, &dRes, N * N * sizeof(int), cudaMemcpyDeviceToHost);
 	
 	printf("Result matrix is \n");
 	for (int i = 0; i < N; i++) {

@@ -16,6 +16,6 @@ done
 for num in {1..3}
 do
 echo "Optimization Level O$num"
-nvcc -o $CUDAFILEEXEC -O$num $CUDAFILE
+nvcc -Xptxas -o $CUDAFILEEXEC -O$num $CUDAFILE
 echo garrett1 | sudo -S nvprof --print-gpu-trace --print-api-trace ./$CUDAFILEEXEC
 done 

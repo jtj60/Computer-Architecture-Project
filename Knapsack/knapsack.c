@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include <omp.h>
 
 void knapsack(int *W, int *val, int *wt, int *n, int *res) {

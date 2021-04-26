@@ -21,6 +21,7 @@ void gradeCheck(int *numGrad, char *gradLetter) {
 int main() {
 	int mark = 90;
 	char letter = 'F';
+	
 	#pragma omp parallel 
 	{
 		gradeCheck(&mark,&letter);

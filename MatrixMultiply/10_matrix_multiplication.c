@@ -12,7 +12,7 @@ void MatrixMul(float *da, float *db, float *dc, int size)
 	for (int col = 0; col<size;col++) {
 		for(int row = 0; row<size; row++) {
 			for (int k = 0; k< size; k++){
-				*dc[row*size + col] += *da[row * size + k] *  (*db[k * size + col]);
+				dc[row * size + col] += da[row * size + k] *  (db[k * size + col]);
 			}
 		}
 	}
@@ -34,7 +34,7 @@ int main()
 		}
 	}
 	
-	MatrixMul(ha,hb,hresult,TILESIZE);
+	MatrixMul((float*)ha,(float*)hb,(float*)hresult,TILESIZE);
 	printf("The result of Matrix multiplication is: \n");
 	
 	for (int i = 0; i< size; i++)

@@ -4,33 +4,11 @@
 #define BLOCKS 1
 #define THREADS 1
 
+#define N	3
+#define GLOBAL_W	50
+
 __global__ void knapsack(int *W, int *val, int *wt, int *n, int *result) {
-	/*base
-	int i = blockIdx.y*blockDim.y + threadIdx.y;
-	int w = blockIdx.x*blockDim.x + threadIdx.x;
-	
-	int K[sizeof(n) + 1][sizeof(W) + 1];
-	
-	if(i<= *n) {
-		if( w<= *W){
-			if(i==0 || w==0)
-				K[i][w] = 0;
-				
-			else if(wt[i -1] <= w) {
-				int a,b;
-				a = val[i-1] + K[i-1][w- wt[i-1]];
-				b = K[i-1][w];
-				
-				K[i][w] = (a>b) ? a : b;
-			}
-			else
-				K[i][w] = K[i -1][w];
-		}
-	}
-	
-	*result = K[*n][*W];*/
-	
-	int K[sizeof(W) + 1][sizeof(n) + 1];
+	int K[N + 1][GLOBAL_W+ 1];
 	
 	for(int i = 0; i <= (*n); i++) {
 		for(int w = 0; w <= (*W); w++){
@@ -42,7 +20,7 @@ __global__ void knapsack(int *W, int *val, int *wt, int *n, int *result) {
 				a = val[i-1] + K[i-1][w - wt[i - 1]];
 				b = K[i-1][w];
 				
-				K[i][w] = (a >= b) ? a : b;
+				K[i][w] = (a > b) ? a : b;
 			}
 			else
 				K[i][w] = K[i -1][w];
@@ -53,11 +31,11 @@ __global__ void knapsack(int *W, int *val, int *wt, int *n, int *result) {
 }
 
 int main() {
-	int val[] = {60,100,120};
-	int wt[] = {10,20,30};
-	int W = 50;
+	int val[N] = {60,100,120};
+	int wt[N] = {10,20,30};
+	int W = GLOBAL_W;
 	int result = 0;
-	int n = sizeof(val)/sizeof(val[0]);
+	int n = N;
 	
 	int *dVal, *dWt, *dW, *dRes, *dN;
 	
@@ -69,8 +47,8 @@ int main() {
 	cudaMalloc(&dN,sizeof(int));
 	
 	//copy values from cpu to gpu
-	cudaMemcpy(dVal, &val, sizeof(val) * sizeof(int), cudaMemcpyHostToDevice);
-	cudaMemcpy(dWt, &wt, sizeof(wt) * sizeof(int), cudaMemcpyHostToDevice);
+	cudaMemcpy(dVal, &val, 3 * sizeof(int), cudaMemcpyHostToDevice);
+	cudaMemcpy(dWt, &wt, 3 * sizeof(int), cudaMemcpyHostToDevice);
 	cudaMemcpy(dW, &W, sizeof(int), cudaMemcpyHostToDevice);
 	cudaMemcpy(dRes, &result, sizeof(int), cudaMemcpyHostToDevice);
 	cudaMemcpy(dW, &W, sizeof(int), cudaMemcpyHostToDevice);

@@ -7,7 +7,7 @@
 
 // This function multiplies mat1[][] and mat2[][],
 // and stores the result in res[][]
-void multiply(int **mat1, int **mat2, int **res)
+void multiply(int mat1[][N], int mat2[][N], int res[][N])
 {
 	int i, j, k;
 	for (i = 0; i < N; i++) {
@@ -34,21 +34,21 @@ int main()
 	int res[N][N]; // To store result
 	int i, j;
 	
-	//pointers
+	/*pointers
 	int **dMat1=(int **)malloc(N*N*sizeof(int));
 	int **dMat2=(int **)malloc(N*N*sizeof(int));
-	int **dRes=(int **)malloc(N*N*sizeof(int));
+	int **dRes=(int **)malloc(N*N*sizeof(int));*/
 	
-	//copy data to poitners
+	/*copy data to poitners
 	memccpy(dMat1, mat1, N*N*sizeof(int));
 	memccpy(dMat2, mat2, N*N*sizeof(int));
-	memccpy(dRes, res, N*N*sizeof(int));
+	memccpy(dRes, res, N*N*sizeof(int));*/
 	#pragma omp parallel 
 	{
-		multiply(dMat1, dMat2, dRes);
+		multiply(mat1,mat2,res);
 	}
 	//copy pointer data to result
-	memccpy(res, dRes, N*N*sizeof(int));
+	//memccpy(res, dRes, N*N*sizeof(int));
 	
 	//display result
 	printf("Result matrix is \n");
@@ -59,8 +59,8 @@ int main()
 	}
 	
 	//free data
-	free(dMat1);
+	/*free(dMat1);
 	free(dMat2);
-	free(dRes);
+	free(dRes);*/
 	return 0;
 }
