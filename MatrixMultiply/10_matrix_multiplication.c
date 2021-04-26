@@ -4,16 +4,17 @@
 #include <stdlib.h>
 #include <string.h>
 #define TILESIZE 2
-
+#define SIZE 4
 
 //Matrix multiplication
-void MatrixMul(float *da, float *db, float *dc, int size)
+void MatrixMul(float mat1[SIZE][SIZE], float mat2[SIZE][SIZE], float res[SIZE][SIZE], int size)
 {
-	for (int col = 0; col<size;col++) {
-		for(int row = 0; row<size; row++) {
-			for (int k = 0; k< size; k++){
-				dc[row * size + col] += da[row * size + k] *  (db[k * size + col]);
-			}
+	int i, j, k;
+	for (i = 0; i < SIZE; i++) {
+		for (j = 0; j < SIZE; j++) {
+			res[i][j] = 0;
+			for (k = 0; k < SIZE; k++)
+				res[i][j] += mat1[i][k] * mat2[k][j];
 		}
 	}
 }
@@ -21,7 +22,7 @@ void MatrixMul(float *da, float *db, float *dc, int size)
 // main routine
 int main()
 {
-	const int size = 4;
+	const int size = SIZE;
 	//Define Array
 	float ha[size][size], hb[size][size], hresult[size][size];
 	//Initialize  Array
@@ -34,7 +35,7 @@ int main()
 		}
 	}
 	
-	MatrixMul((float*)ha,(float*)hb,(float*)hresult,TILESIZE);
+	MatrixMul(ha,hb,hresult,TILESIZE);
 	printf("The result of Matrix multiplication is: \n");
 	
 	for (int i = 0; i< size; i++)
