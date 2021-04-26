@@ -5,7 +5,7 @@
 #define THREADS 1
 #define CORES 1
 __global__ void add( int *a, int *b, int *c ) {
-	int tid = 0;	// handle date at index
+	int tid = blockIdx.x * blockDim.x + threadIdx.x;	// handle date at index
 	
 	while (tid < N) {
 		c[tid] = a[tid] + b[tid];

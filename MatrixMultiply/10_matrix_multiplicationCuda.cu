@@ -13,7 +13,7 @@ __global__ void gpu_Matrix_Mul_nonshared(float *d_a, float *d_b, float *d_c, con
 	int row, col;
 	col = TILE_SIZE * blockIdx.x + threadIdx.x;
 	row = TILE_SIZE * blockIdx.y + threadIdx.y;
-
+	
 	for (int k = 0; k< size; k++)
 	{
 		d_c[row*size + col] += d_a[row * size + k] * d_b[k * size + col];

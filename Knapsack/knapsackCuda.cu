@@ -8,10 +8,34 @@
 #define GLOBAL_W	50
 
 __global__ void knapsack(int *W, int *val, int *wt, int *n, int *result) {
-	int K[N + 1][GLOBAL_W+ 1];
+	int K[N + 1][GLOBAL_W + 1];
 	
-	for(int i = 0; i <= (*n); i++) {
-		for(int w = 0; w <= (*W); w++){
+	/*GPU parallel
+	unsigned int i = blockIdx.x * blockDim.x + threadIdx.x;
+	unsigned int w = blockIdx.y * blockDim.y + threadIdx.y;
+	
+	while(i <= (*n)) {
+		while(w <= (*W)){
+			
+			if(i == 0 || w == 0)
+				K[i][w] = 0;
+			else if(wt[i -1] <= w) {
+				int a,b;
+				a = val[i-1] + K[i-1][w - wt[i - 1]];
+				b = K[i-1][w];
+				
+				K[i][w] = (a > b) ? a : b;
+			}
+			else
+				K[i][w] = K[i -1][w];
+			w++;
+		}
+		i++;
+	}
+	__syncthreads();*/
+	//FOR LOOP
+	for(int i =0;i <= (*n);i++) {
+		for(int w = 0;w <= (*W);w++){
 			
 			if(i == 0 || w == 0)
 				K[i][w] = 0;
@@ -26,7 +50,6 @@ __global__ void knapsack(int *W, int *val, int *wt, int *n, int *result) {
 				K[i][w] = K[i -1][w];
 		}
 	}
-	
 	*result = K[*n][*W];
 }
 

@@ -3,12 +3,9 @@
 
 #define N 10
 void add( int *a, int *b, int *c ) {
-	int tid = 0;	// this is CPU zero, so we start at zero
-	
-	while (tid < N) {
-		c[tid] = a[tid] + b[tid];
-		tid += 1;	// we have one CPU, so we increment by one
-	}
+	#pragma omp parallel for
+		for(int tid =0; tid < N; tid++)
+			c[tid] = a[tid] + b[tid];
 }
 int main( void ) {
 	int a[N], b[N], c[N];
