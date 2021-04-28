@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <omp.h>
 
-#define N 10
+#define N 10000
 void add( int *a, int *b, int *c ) {
 	int tid = omp_get_thread_num();
 		if(tid < N)

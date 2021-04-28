@@ -45,7 +45,7 @@ __global__ void gpu_Matrix_Mul_shared(float *d_a, float *d_b, float *d_c, const 
 // main routine
 int main()
 {
-	const int size = 4;
+	const int size = 100;
 	//Define Host Array
 	float h_a[size][size], h_b[size][size],h_result[size][size];
 	//Defining device Array

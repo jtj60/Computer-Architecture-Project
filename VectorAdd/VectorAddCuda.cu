@@ -1,9 +1,9 @@
 #include <stdio.h>
 #include <cuda.h>
 
-#define N 10
+#define N 1000
 #define THREADS 1
-#define CORES 64
+#define CORES 1
 __global__ void add( int *a, int *b, int *c ) {
 	int tid = threadIdx.x;	// handle date at index
 	c[tid] = a[tid] + b[tid];

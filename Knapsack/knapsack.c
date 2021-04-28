@@ -1,11 +1,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <omp.h>
-
+#define SIZE 1000
 void knapsack(int *W, int *val, int *wt, int *n, int *res) {
 	//base
 	int K[*n + 1][*W + 1];
-	#pragma omp parallel for
 		for(int i = 0; i <= (*n); i++) {
 			for(int w = 0; w <= (*W); w++){
 				
@@ -27,16 +26,21 @@ void knapsack(int *W, int *val, int *wt, int *n, int *res) {
 }
 
 int main() {
-	int val[] = {60,100,120};
-	int wt[] = {10,20,30};
+	
+	int val[SIZE];
+	int wt[SIZE];
+	
+	//Initialize  Array
+	for (int i = 0; i<SIZE; i++){
+		val[i] = rand() % 100 +1;
+		wt[i] = rand() % 100 +1;
+	}
+	
 	int W = 50;
 	int result = 0;
 	int n = sizeof(val)/sizeof(val[0]);
 	
-	#pragma omp parallel
-	{
-		knapsack((int*)&W, (int*)&val, (int*)&wt, (int*)&n, (int *)&result);
-	}
+	knapsack((int*)&W, (int*)&val, (int*)&wt, (int*)&n, (int *)&result);
 	
 	printf("Result: %d\n", result);
 	return 0;

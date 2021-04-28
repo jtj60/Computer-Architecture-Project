@@ -1,57 +1,72 @@
 							
 #include <stdio.h>
 #include <cuda.h>
+#include <stdlib.h>
 
-#define BLOCKS 64
+#define BLOCKS 1
 #define THREADS 1
+#define SIZE 1000
 __global__ void gradeCheck(int *numGrad, char *gradLetter) {
+	int tid = threadIdx.x;
 	
-	if(*numGrad >= 90 && *numGrad <= 100)
-		*gradLetter = 'A';
+	if(numGrad[tid] >= 90 && numGrad[tid] <= 100)
+		gradLetter[tid] = 'A';
+	
+	else if(numGrad[tid] >= 80 && numGrad[tid] < 90)
+		gradLetter[tid] = 'B';
+	
+	else if(numGrad[tid] >= 70 && numGrad[tid] < 80)
+		gradLetter[tid] = 'C';
+	
+	else if(numGrad[tid] >= 60 && numGrad[tid] < 70)
+		gradLetter[tid] = 'D';
+	
+	else if(numGrad[tid] >= 0 && numGrad[tid] < 60)
+		gradLetter[tid] = 'F';
 		
-	else if(*numGrad >= 80 && *numGrad < 90)
-		*gradLetter = 'B';
-		
-	else if(*numGrad >= 70 && *numGrad < 80)
-		*gradLetter = 'C';
-		
-	else if(*numGrad >= 60 && *numGrad < 70)
-		*gradLetter = 'D';
-		
-	else if(*numGrad >= 0 && *numGrad < 60)
-		*gradLetter = 'F';
+		__syncthreads();
 		
 }
 int main() {
-	int mark = 90;
-	char letter = 'F';
+	int marks[SIZE];
+	char letter[SIZE];
 	
-	int *dMark;
+	int *dMarks;
 	char *dLetter;
 	
+	int upper = 100;
+	int lower = 50;
+	
+	//Initialize  Array
+	for (int i = 0; i<SIZE; i++){
+		marks[i] = (rand() % (upper - lower + 1)) + lower;
+		letter[i] = 'F';
+	}
+	
 	//allocate memory
-	cudaMalloc(&dMark,sizeof(int));
-	cudaMalloc(&dLetter,sizeof(char));
+	cudaMalloc(&dMarks,SIZE * sizeof(int));
+	cudaMalloc(&dLetter,SIZE * sizeof(char));
 	
 	//copy data from cpu to gpu
-	cudaMemcpy(dMark,&mark,sizeof(int), cudaMemcpyHostToDevice);
-	cudaMemcpy(dLetter,&letter,sizeof(char), cudaMemcpyHostToDevice);
+	cudaMemcpy(dMarks,&marks,SIZE * sizeof(int), cudaMemcpyHostToDevice);
+	cudaMemcpy(dLetter,&letter,SIZE * sizeof(char), cudaMemcpyHostToDevice);
 	
 	//execute kernel function
-	gradeCheck<<<BLOCKS,THREADS>>>(dMark,dLetter);
+	gradeCheck<<<BLOCKS,SIZE>>>(dMarks,dLetter);
 	
 	//wait for gpu to finish
 	cudaDeviceSynchronize();
 	
 	//copy data from gpu to cpu
-	cudaMemcpy(&letter,dLetter, sizeof(char), cudaMemcpyDeviceToHost);
-	cudaMemcpy(&mark,dMark, sizeof(int), cudaMemcpyDeviceToHost);
+	cudaMemcpy(&letter,dLetter, SIZE * sizeof(char), cudaMemcpyDeviceToHost);
+	cudaMemcpy(&marks,dMarks, SIZE * sizeof(int), cudaMemcpyDeviceToHost);
 	
 	//print result
-	printf("Number Grade: %d\t Letter Grade: %c\n",mark,letter);
+	for(int i =0; i<SIZE;i++)
+		printf("Number Grade: %d\t Letter Grade: %c\n",marks[i],letter[i]);
 	
 	//free gpu memory
-	cudaFree(dMark);
+	cudaFree(dMarks);
 	cudaFree(dLetter);
 	return 0;
 }

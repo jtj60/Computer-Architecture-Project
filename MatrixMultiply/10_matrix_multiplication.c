@@ -5,7 +5,7 @@
 #include <string.h>
 #include <omp.h>
 #define TILESIZE 2
-#define SIZE 4
+#define SIZE 100
 
 //Matrix multiplication
 void MatrixMul(float mat1[SIZE][SIZE], float mat2[SIZE][SIZE], float res[SIZE][SIZE], int size)
