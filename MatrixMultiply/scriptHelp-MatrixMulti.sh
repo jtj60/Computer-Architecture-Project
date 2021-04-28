@@ -8,8 +8,8 @@ for num in {1..10}
 do
 echo $PASSWORD | sudo -S perf stat --event cache-references,cache-misses,cycles,page-faults,instructions,cpu-clock ./$CPROGRAM
 done
-for num in {1..10}
-do
+#for num in {1..10}
+#do
 #cuda program commands
-echo $PASSWORD | sudo -S nvprof --events inst_issued,l1_cache_global_hit_rate,l2_l1_read_hit_rate,nc_cache_global_hit_rate,issued_ipc ./$CUDAPROGRAM
-done 
+#echo $PASSWORD | sudo -S nvprof --events inst_issued,l1_cache_global_hit_rate,l2_l1_read_hit_rate,nc_cache_global_hit_rate,issued_ipc ./$CUDAPROGRAM
+#done 
