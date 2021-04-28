@@ -1,16 +1,13 @@
-#include<stdio.h>
+#include <stdio.h>
 #include <cuda.h>
 
 #define N 10
 #define THREADS 1
-#define CORES 1
+#define CORES 64
 __global__ void add( int *a, int *b, int *c ) {
-	int tid = blockIdx.x * blockDim.x + threadIdx.x;	// handle date at index
-	
-	while (tid < N) {
-		c[tid] = a[tid] + b[tid];
-		tid+=1;
-	}
+	int tid = threadIdx.x;	// handle date at index
+	c[tid] = a[tid] + b[tid];
+	__syncthreads();
 }
 int main( void ) {
 	int a[N], b[N], c[N];
@@ -31,7 +28,10 @@ int main( void ) {
 	cudaMemcpy(dA,a, N*sizeof(int), cudaMemcpyHostToDevice);
 	cudaMemcpy(dB,b, N*sizeof(int), cudaMemcpyHostToDevice);
 	
-	add<<<CORES,THREADS>>>( dA, dB, dC );
+	add<<<CORES,N>>>( dA, dB, dC );
+	
+	//wait for gpu to finish
+	cudaDeviceSynchronize();
 	
 	//copy array c from GPU to CPU
 	cudaMemcpy(c, dC, N*sizeof(int), cudaMemcpyDeviceToHost);

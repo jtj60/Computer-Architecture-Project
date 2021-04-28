@@ -1,8 +1,8 @@
 #! /bin/bash
-CFILE=gradeChecker.c
-CFILEEXEC=gradeChecker
-CUDAFILE=gradeCheckerCuda.cu
-CUDAFILEEXEC=gradeCheckerCuda
+CFILE=knapsack.c
+CFILEEXEC=knapsack
+CUDAFILE=knapsackCuda.cu
+CUDAFILEEXEC=knapsackCuda
 
 #Optimization Level C File
 for num in {1..3}

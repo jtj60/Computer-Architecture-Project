@@ -1,6 +1,6 @@
 #!/bin/bash
-CPROGRAM=gradeChecker
-CUDAPROGRAM=gradeCheckerCuda
+CPROGRAM=knapsack
+CUDAPROGRAM=knapsackCuda
 PASSWORD=garrett1
 
 #C program commands

@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include <cuda.h>
 
-#define BLOCKS 1
+#define BLOCKS 64
 #define THREADS 1
 __global__ void gradeCheck(int *numGrad, char *gradLetter) {
 	
