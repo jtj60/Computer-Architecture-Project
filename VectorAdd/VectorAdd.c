@@ -3,12 +3,14 @@
 
 #define N 10
 void add( int *a, int *b, int *c ) {
-	#pragma omp parallel for
-		for(int tid =0; tid < N; tid++)
+	int tid = omp_get_thread_num();
+		if(tid < N)
 			c[tid] = a[tid] + b[tid];
 }
 int main( void ) {
 	int a[N], b[N], c[N];
+	
+	int numOfThreads = N;
 	
 	// fill the arrays 'a' and 'b' on the CPU
 	for (int i=0; i<N; i++) {
@@ -16,7 +18,7 @@ int main( void ) {
 		b[i] = i * i;
 	}
 	
-	#pragma omp parallel 
+	#pragma omp parallel num_threads(numOfThreads)
 	{
 		add( a, b, c );
 	}
