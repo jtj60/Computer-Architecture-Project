@@ -4,17 +4,18 @@
 #include <stdlib.h>
 #include <string.h>
 #include <omp.h>
-#define TILESIZE 2
 #define SIZE 100
 
 //Matrix multiplication
-void MatrixMul(float mat1[SIZE][SIZE], float mat2[SIZE][SIZE], float res[SIZE][SIZE], int size)
+void MatrixMul(float mat1[SIZE][SIZE], float mat2[SIZE][SIZE], float res[SIZE][SIZE])
 {
 	int i, j, k;
 	#pragma omp parallel for
 		for (i = 0; i < SIZE; i++) {
+			#pragma omp parallel for
 			for (j = 0; j < SIZE; j++) {
 				res[i][j] = 0;
+				#pragma omp parallel for
 				for (k = 0; k < SIZE; k++)
 					res[i][j] += mat1[i][k] * mat2[k][j];
 			}
@@ -38,7 +39,7 @@ int main()
 	}
 	#pragma omp parallel
 	{
-		MatrixMul(ha,hb,hresult,TILESIZE);
+		MatrixMul(ha,hb,hresult);
 	}
 	printf("The result of Matrix multiplication is: \n");
 	

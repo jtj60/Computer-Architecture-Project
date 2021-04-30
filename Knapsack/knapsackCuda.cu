@@ -5,14 +5,14 @@
 #define THREADS 1
 #define SIZE	1000	//MAX array size
 #define GLOBAL_W	50
-
-__global__ void knapsack(int *val, int *wt,int *result) {
-	int K[SIZE + 1][GLOBAL_W + 1];
+#define TILE_SIZE 100
+__global__ void knapsack(int *val,int *wt,int *result) {
+	
+	int K[SIZE+1][GLOBAL_W+1];
 	
 	//FOR LOOP
-	for(int i =0;i <= SIZE;i++) {
-		for(int w = 0;w <= GLOBAL_W;w++){
-			
+	for(int i=0; i <= SIZE;i++) {
+		for(int w=0; w<=GLOBAL_W;w++) {
 			if(i == 0 || w == 0)
 				K[i][w] = 0;
 			else if(wt[i -1] <= w) {
@@ -52,6 +52,10 @@ int main() {
 	cudaMemcpy(dWt, &wt, SIZE * sizeof(int), cudaMemcpyHostToDevice);
 	cudaMemcpy(dRes, &result, sizeof(int), cudaMemcpyHostToDevice);
 	
+	/*Define grid and block dimensions
+	dim3 dimGrid(SIZE/TILE_SIZE,SIZE/TILE_SIZE, 1);
+	dim3 dimBlock(TILE_SIZE, TILE_SIZE, 1);
+	*/
 	
 	//call kernel function
 	knapsack<<<BLOCKS,THREADS>>>(dVal,dWt,dRes);

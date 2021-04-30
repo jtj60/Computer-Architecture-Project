@@ -4,19 +4,18 @@
 #include <cuda.h>
 #include <cuda_runtime.h>
 #include <math.h>
-#define TILE_SIZE 2
-
-
+#define TILE_SIZE 25
+#define SIZE 100
 //Matrix multiplication using non shared kernel
-__global__ void gpu_Matrix_Mul_nonshared(float *d_a, float *d_b, float *d_c, const int size)
+__global__ void gpu_Matrix_Mul_nonshared(float *d_a, float *d_b, float *d_c)
 {
 	int row, col;
 	col = TILE_SIZE * blockIdx.x + threadIdx.x;
 	row = TILE_SIZE * blockIdx.y + threadIdx.y;
 	
-	for (int k = 0; k< size; k++)
+	for (int k = 0; k< SIZE; k++)
 	{
-		d_c[row*size + col] += d_a[row * size + k] * d_b[k * size + col];
+		d_c[row*SIZE + col] += d_a[row * SIZE + k] * d_b[k * SIZE + col];
 	}
 }
 
@@ -45,44 +44,43 @@ __global__ void gpu_Matrix_Mul_shared(float *d_a, float *d_b, float *d_c, const 
 // main routine
 int main()
 {
-	const int size = 100;
 	//Define Host Array
-	float h_a[size][size], h_b[size][size],h_result[size][size];
+	float h_a[SIZE][SIZE], h_b[SIZE][SIZE],h_result[SIZE][SIZE];
 	//Defining device Array
 	float *d_a, *d_b, *d_result; 
 	//Initialize host Array
-	for (int i = 0; i<size; i++)
+	for (int i = 0; i<SIZE; i++)
 	{
-		for (int j = 0; j<size; j++)
+		for (int j = 0; j<SIZE; j++)
 		{
 			h_a[i][j] = i;
 			h_b[i][j] = j;
 		}
 	}
 
-	cudaMalloc((void **)&d_a, size*size*sizeof(int));
-	cudaMalloc((void **)&d_b, size*size * sizeof(int));
-	cudaMalloc((void **)&d_result, size*size* sizeof(int));
+	cudaMalloc((void **)&d_a, SIZE*SIZE*sizeof(int));
+	cudaMalloc((void **)&d_b, SIZE*SIZE * sizeof(int));
+	cudaMalloc((void **)&d_result, SIZE*SIZE* sizeof(int));
 
 
 	//copy host array to device array
 
-	cudaMemcpy(d_a, h_a, size*size* sizeof(int), cudaMemcpyHostToDevice);
-	cudaMemcpy(d_b, h_b, size*size* sizeof(int), cudaMemcpyHostToDevice);
+	cudaMemcpy(d_a, h_a, SIZE*SIZE* sizeof(int), cudaMemcpyHostToDevice);
+	cudaMemcpy(d_b, h_b, SIZE*SIZE* sizeof(int), cudaMemcpyHostToDevice);
 	
 	//Define grid and block dimensions
-	dim3 dimGrid(size / TILE_SIZE, size / TILE_SIZE, 1);
+	dim3 dimGrid(SIZE / TILE_SIZE, SIZE / TILE_SIZE, 1);
 	dim3 dimBlock(TILE_SIZE, TILE_SIZE, 1);
 	//gpu_Matrix_Mul_nonshared << <dimGrid, dimBlock >> > (d_a, d_b, d_result, size);
 
-	gpu_Matrix_Mul_nonshared << <dimGrid, dimBlock >> > (d_a, d_b, d_result, size);
+	gpu_Matrix_Mul_nonshared << <dimGrid, dimBlock >> > (d_a, d_b, d_result);
 
-	cudaMemcpy(h_result, d_result, size*size * sizeof(int),	cudaMemcpyDeviceToHost);
+	cudaMemcpy(h_result, d_result, SIZE*SIZE * sizeof(int),	cudaMemcpyDeviceToHost);
 	printf("The result of Matrix multiplication is: \n");
 	
-	for (int i = 0; i< size; i++)
+	for (int i = 0; i< SIZE; i++)
 	{
-		for (int j = 0; j < size; j++)
+		for (int j = 0; j < SIZE; j++)
 		{
 			printf("%f   ", h_result[i][j]);
 		}

@@ -5,7 +5,7 @@
 void knapsack(int *W, int *val, int *wt, int *n, int *res) {
 	//base
 	int K[*n + 1][*W + 1];
-		for(int i = 0; i <= (*n); i++) {
+		for(int i =0;i <= (*n);i++) {
 			for(int w = 0; w <= (*W); w++){
 				
 				if(i == 0 || w == 0)
@@ -40,7 +40,10 @@ int main() {
 	int result = 0;
 	int n = sizeof(val)/sizeof(val[0]);
 	
-	knapsack((int*)&W, (int*)&val, (int*)&wt, (int*)&n, (int *)&result);
+	#pragma omp parallel num_threads(1)
+	{
+		knapsack((int*)&W, (int*)&val, (int*)&wt, (int*)&n, (int *)&result);
+	}
 	
 	printf("Result: %d\n", result);
 	return 0;

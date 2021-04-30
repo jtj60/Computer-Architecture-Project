@@ -5,9 +5,11 @@
 
 #define BLOCKS 1
 #define THREADS 1
-#define SIZE 1000
+#define SIZE 10000
+#define TILE_SIZE 32
 __global__ void gradeCheck(int *numGrad, char *gradLetter) {
-	int tid = threadIdx.x;
+	int blockId = (gridDim.x * blockIdx.y) + blockIdx.x;
+	int tid = (blockId * blockDim.x) + threadIdx.x;
 	
 	if(numGrad[tid] >= 90 && numGrad[tid] <= 100)
 		gradLetter[tid] = 'A';
@@ -24,9 +26,11 @@ __global__ void gradeCheck(int *numGrad, char *gradLetter) {
 	else if(numGrad[tid] >= 0 && numGrad[tid] < 60)
 		gradLetter[tid] = 'F';
 		
+	//printf("ThreadId: %d: Number Grade: %d\t Letter Grade: %c\n",tid,numGrad[tid],gradLetter[tid]);
 		__syncthreads();
 		
 }
+//__global__ void printArray(int *numGrad, char *gradLetter)
 int main() {
 	int marks[SIZE];
 	char letter[SIZE];
@@ -51,8 +55,12 @@ int main() {
 	cudaMemcpy(dMarks,&marks,SIZE * sizeof(int), cudaMemcpyHostToDevice);
 	cudaMemcpy(dLetter,&letter,SIZE * sizeof(char), cudaMemcpyHostToDevice);
 	
+	//Define grid and block dimensions
+	dim3 dimGrid(SIZE/100,SIZE/100,1);
+	dim3 dimBlock(TILE_SIZE, TILE_SIZE, 1);
+	
 	//execute kernel function
-	gradeCheck<<<BLOCKS,SIZE>>>(dMarks,dLetter);
+	gradeCheck<<<dimGrid,dimBlock>>>(dMarks,dLetter);
 	
 	//wait for gpu to finish
 	cudaDeviceSynchronize();
@@ -63,7 +71,7 @@ int main() {
 	
 	//print result
 	for(int i =0; i<SIZE;i++)
-		printf("Number Grade: %d\t Letter Grade: %c\n",marks[i],letter[i]);
+		printf("%d: Number Grade: %d\t Letter Grade: %c\n",i,marks[i],letter[i]);
 	
 	//free gpu memory
 	cudaFree(dMarks);

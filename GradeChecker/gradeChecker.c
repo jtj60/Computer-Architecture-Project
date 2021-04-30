@@ -1,7 +1,7 @@
 #include <omp.h>			
 #include <stdio.h>
 #include <stdlib.h>
-#define SIZE 1000
+#define SIZE 10000
 void gradeCheck(int *numGrad, char *gradLetter) {
 	if(*numGrad >= 90 && *numGrad <= 100)
 		*gradLetter = 'A';
@@ -39,8 +39,8 @@ int main() {
 		int tid = omp_get_thread_num();
 		if(tid <SIZE)
 			gradeCheck(&marks[tid],&letter[tid]);
+			
+		printf("ThreadID: %d: Number Grade: %d\t Letter Grade: %c\n",tid,marks[tid],letter[tid]);
 	}
-	for(int w =0; w<SIZE; w++)
-		printf("Number Grade: %d\t Letter Grade: %c\n",marks[w],letter[w]);
 	return 0;
 }
