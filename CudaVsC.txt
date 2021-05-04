@@ -1,0 +1,11 @@
+AvgExecTime (less is better): 3/4 times Cuda performs better
+Cache-Hits (more is better): 2/4 times Cuda performs better
+Cache-misses (less is better): 2/4 times Cuda performs better
+Cache-references (less is better): 2/4 times Cuda performs better
+CPI (less is better): 3/4 times Cuda performs better
+Clock rate: 3/4 times Cuda performs better
+Hit rate (more is better): 1/4 times Cuda performs better
+miss rate (less is better): 1/4 times Cuda performs better
+Cycles (less is better): 3/4 times Cuda performs better
+instructions (less is better): 3/4 times Cuda performs better
+
