@@ -1,7 +1,7 @@
 #!/bin/bash
 CPROGRAM=knapsack
 CUDAPROGRAM=knapsackCuda
-PASSWORD=garrett1
+PASSWORD=PASSWORD
 
 #C program commands
 for num in {1..10}
