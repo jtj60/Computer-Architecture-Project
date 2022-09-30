@@ -1,7 +1,7 @@
 #!/bin/bash
 CPROGRAM=gradeChecker
 CUDAPROGRAM=gradeCheckerCuda
-PASSWORD=garrett1
+PASSWORD=PASSWROD
 
 #C program commands
 for num in {1..10}
