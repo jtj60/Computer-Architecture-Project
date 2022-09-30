@@ -1,7 +1,7 @@
 #!/bin/bash
 CPROGRAM=10_matrix_multiplication
 CUDAPROGRAM=10_matrix_multiplicationCuda
-PASSWORD=garrett1
+PASSWORD=PASSWORD
 
 #C program commands
 for num in {1..10}
